@@ -12,15 +12,12 @@ import auth
 
 load_dotenv()
 APP_ID: str = os.getenv("APP_ID", "")
-PRIVATE_KEY: str = os.getenv("PRIVATE_KEY", "")
-
+SANDBOX_PRIVATE_KEY: str = os.getenv("SANDBOX_PRIVATE_KEY", "")
 
 ASPSP_COUNTRY = "FI"
 
-# NOTE: Must match the redirect URL registered in your Enable Banking
-# application configuration.
-_REDIRECT_URL = "http://127.0.0.1:5000/auth/callback"
-# _REDIRECT_URL = "http://localhost:5000/auth/callback"
+REDIRECT_URL = "http://127.0.0.1:5000/auth/callback"
+# REDIRECT_URL = "http://localhost:5000/auth/callback"
 
 app = flask.Flask(__name__)
 
@@ -37,7 +34,7 @@ def home() -> flask.typing.ResponseReturnValue:
         non-2xx response.
     """
     try:
-        aspsps = auth.list_aspsps(APP_ID, PRIVATE_KEY, ASPSP_COUNTRY)
+        aspsps = auth.list_aspsps(APP_ID, SANDBOX_PRIVATE_KEY, ASPSP_COUNTRY)
     except requests.HTTPError as exc:
         return flask.jsonify({"error": str(exc)}), 502
     return flask.render_template("index.html", aspsps=aspsps)
@@ -63,10 +60,10 @@ def auth_start(aspsp_name: str) -> flask.typing.ResponseReturnValue:
     try:
         bank_url = auth.start_auth(
             APP_ID,
-            PRIVATE_KEY,
+            SANDBOX_PRIVATE_KEY,
             aspsp_name,
             ASPSP_COUNTRY,
-            _REDIRECT_URL,
+            REDIRECT_URL,
             state,
         )
     except requests.HTTPError as exc:
@@ -94,7 +91,7 @@ def auth_callback() -> flask.typing.ResponseReturnValue:
         return flask.jsonify({"error": "missing code parameter"}), 400
 
     try:
-        session_data = auth.create_session(APP_ID, PRIVATE_KEY, code)
+        session_data = auth.create_session(APP_ID, SANDBOX_PRIVATE_KEY, code)
     except requests.HTTPError as exc:
         return flask.jsonify({"error": str(exc)}), 502
     return flask.jsonify(session_data)
