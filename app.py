@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 import auth
 
 load_dotenv()
-APP_ID: str = os.getenv("APP_ID", "")
-SANDBOX_PRIVATE_KEY: str = os.getenv("SANDBOX_PRIVATE_KEY", "")
+APP_ID = os.getenv("APP_ID")
+SANDBOX_PRIVATE_KEY = os.getenv("SANDBOX_PRIVATE_KEY")
 
 ASPSP_COUNTRY = "FI"
 
@@ -34,6 +34,14 @@ def home() -> flask.typing.ResponseReturnValue:
         JSON error body with HTTP 502 if the Enable Banking API returns a
         non-2xx response.
     """
+    if APP_ID is None or SANDBOX_PRIVATE_KEY is None:
+        return {
+            "error": (
+                "Could not load the APP_ID or SANDBOX_PRIVATE_KEY environment "
+                "variables"
+            )
+        }
+
     try:
         aspsps = auth.list_aspsps(APP_ID, SANDBOX_PRIVATE_KEY, ASPSP_COUNTRY)
     except requests.HTTPError as exc:
