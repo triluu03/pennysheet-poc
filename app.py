@@ -15,17 +15,19 @@ import auth
 project_folder = os.path.expanduser("~/mysite/pennysheet-poc")
 load_dotenv(os.path.join(project_folder, ".env"))
 
+APP_ID = os.getenv("PRODUCTION_APP_ID")
+PRIVATE_KEY = os.getenv("PRODUCTION_PRIVATE_KEY")
+
 REDIRECT_URL = "https://triluu03.pythonanywhere.com/auth/callback"
 
 # NOTE: Turn these on when running locally.
 # load_dotenv()
+# APP_ID = os.getenv("SANDBOX_APP_ID")
+# PRIVATE_KEY = os.getenv("SANDBOX_PRIVATE_KEY")
 #
 # REDIRECT_URL = "http://127.0.0.1:5000/auth/callback"
 # REDIRECT_URL = "http://localhost:5000/auth/callback"
 
-######
-APP_ID = os.getenv("APP_ID")
-SANDBOX_PRIVATE_KEY = os.getenv("SANDBOX_PRIVATE_KEY")
 ASPSP_COUNTRY = "FI"
 
 app = flask.Flask(__name__)
@@ -42,16 +44,13 @@ def home() -> flask.typing.ResponseReturnValue:
         JSON error body with HTTP 502 if the Enable Banking API returns a
         non-2xx response.
     """
-    if APP_ID is None or SANDBOX_PRIVATE_KEY is None:
+    if APP_ID is None or PRIVATE_KEY is None:
         return {
-            "error": (
-                "Could not load the APP_ID or SANDBOX_PRIVATE_KEY environment "
-                "variables"
-            )
+            "error": "Could not load the APP_ID or PRIVATE_KEY env variables"
         }
 
     try:
-        aspsps = auth.list_aspsps(APP_ID, SANDBOX_PRIVATE_KEY, ASPSP_COUNTRY)
+        aspsps = auth.list_aspsps(APP_ID, PRIVATE_KEY, ASPSP_COUNTRY)
     except requests.HTTPError as exc:
         return flask.jsonify({"error": str(exc)}), 502
     return flask.render_template("index.html", aspsps=aspsps)
@@ -90,7 +89,7 @@ def auth_start(aspsp_name: str) -> flask.typing.ResponseReturnValue:
     try:
         bank_url = auth.start_auth(
             APP_ID,
-            SANDBOX_PRIVATE_KEY,
+            PRIVATE_KEY,
             aspsp_name,
             ASPSP_COUNTRY,
             REDIRECT_URL,
@@ -121,7 +120,7 @@ def auth_callback() -> flask.typing.ResponseReturnValue:
         return flask.jsonify({"error": "missing code parameter"}), 400
 
     try:
-        session_data = auth.create_session(APP_ID, SANDBOX_PRIVATE_KEY, code)
+        session_data = auth.create_session(APP_ID, PRIVATE_KEY, code)
     except requests.HTTPError as exc:
         return flask.jsonify({"error": str(exc)}), 502
     return flask.jsonify(session_data)
