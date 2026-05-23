@@ -7,7 +7,7 @@ from typing import Any
 import jwt
 import requests
 
-_BASE_URL = "https://api.enablebanking.com"
+BASE_URL = "https://api.enablebanking.com"
 
 
 def build_jwt(app_id: str, private_key: str) -> str:
@@ -92,7 +92,7 @@ def start_auth(
         "psu_type": "personal",
     }
     response = requests.post(
-        f"{_BASE_URL}/auth",
+        f"{BASE_URL}/auth",
         json=body,
         headers={"Authorization": f"Bearer {token}"},
     )
@@ -125,7 +125,7 @@ def create_session(app_id: str, private_key: str, code: str) -> dict[str, Any]:
     """
     token = build_jwt(app_id, private_key)
     response = requests.post(
-        f"{_BASE_URL}/sessions",
+        f"{BASE_URL}/sessions",
         json={"code": code},
         headers={"Authorization": f"Bearer {token}"},
     )
@@ -157,7 +157,7 @@ def list_aspsps(app_id: str, private_key: str, country: str) -> list[dict]:
     """
     token = build_jwt(app_id, private_key)
     response = requests.get(
-        f"{_BASE_URL}/aspsps",
+        f"{BASE_URL}/aspsps",
         params={"country": country},
         headers={"Authorization": f"Bearer {token}"},
     )

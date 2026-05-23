@@ -16,7 +16,8 @@ SANDBOX_PRIVATE_KEY: str = os.getenv("SANDBOX_PRIVATE_KEY", "")
 
 ASPSP_COUNTRY = "FI"
 
-REDIRECT_URL = "http://127.0.0.1:5000/auth/callback"
+REDIRECT_URL = "https://triluu03.pythonanywhere.com/auth/callback"
+# REDIRECT_URL = "http://127.0.0.1:5000/auth/callback"
 # REDIRECT_URL = "http://localhost:5000/auth/callback"
 
 app = flask.Flask(__name__)
@@ -38,6 +39,19 @@ def home() -> flask.typing.ResponseReturnValue:
     except requests.HTTPError as exc:
         return flask.jsonify({"error": str(exc)}), 502
     return flask.render_template("index.html", aspsps=aspsps)
+
+
+@app.route("/status")
+def status_check() -> flask.typing.ResponseReturnValue:
+    """Check the status of the application.
+
+    Returns
+    -------
+    flask.typing.ResponseReturnValue
+        A simple JSON indicating that the application is working.
+
+    """
+    return {"status": "working"}
 
 
 @app.route("/auth/start/<aspsp_name>")
