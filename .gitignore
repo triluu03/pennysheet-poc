@@ -8,3 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Modules
+node_modules/
+python_modules/
+.wrangler/
+
+# Local wrangler secrets / dev environment variables
+.dev.vars
+.env

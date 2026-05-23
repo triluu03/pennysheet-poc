@@ -1,24 +1,30 @@
 [project]
 name = "pennysheet-poc"
 version = "0.1.0"
-description = "Pennysheet POC in Python Flask"
+description = "Pennysheet POC"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = "==3.13.*"
 dependencies = [
-    "cryptography>=48.0.0",
-    "flask>=3.1.3",
-    "pyjwt>=2.13.0",
+    "flask",
+    "httpx",
+    "pyjwt",
+    "cryptography",
     "requests>=2.34.2",
+    "dotenv>=0.9.9",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0.3",
+    "pytest",
     "ruff>=0.15.14",
+    "workers-py",
+    "workers-runtime-sdk",
 ]
 
+[tool.pytest.ini_options]
+
 [tool.ruff]
-target-version = "py314"
+target-version = "py313"
 exclude = []
 line-length = 79
 
