@@ -10,15 +10,23 @@ from dotenv import load_dotenv
 
 import auth
 
-load_dotenv()
-APP_ID = os.getenv("APP_ID")
-SANDBOX_PRIVATE_KEY = os.getenv("SANDBOX_PRIVATE_KEY")
-
-ASPSP_COUNTRY = "FI"
+# NOTE: these are for deploying to PythonAnywhere.
+# Uncomment them when running locally.
+project_folder = os.path.expanduser("~/mysite/pennysheet-poc")
+load_dotenv(os.path.join(project_folder, ".env"))
 
 REDIRECT_URL = "https://triluu03.pythonanywhere.com/auth/callback"
+
+# NOTE: Turn these on when running locally.
+# load_dotenv()
+#
 # REDIRECT_URL = "http://127.0.0.1:5000/auth/callback"
 # REDIRECT_URL = "http://localhost:5000/auth/callback"
+
+######
+APP_ID = os.getenv("APP_ID")
+SANDBOX_PRIVATE_KEY = os.getenv("SANDBOX_PRIVATE_KEY")
+ASPSP_COUNTRY = "FI"
 
 app = flask.Flask(__name__)
 
