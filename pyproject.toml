@@ -5,7 +5,26 @@ description = "Pennysheet POC in Python Flask"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "cryptography>=48.0.0",
     "flask>=3.1.3",
     "pyjwt>=2.13.0",
     "requests>=2.34.2",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "ruff>=0.15.14",
+]
+
+[tool.ruff]
+target-version = "py314"
+exclude = []
+line-length = 79
+
+[tool.ruff.lint]
+select = ["D", "E", "F", "I"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
