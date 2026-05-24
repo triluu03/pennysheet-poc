@@ -15,8 +15,8 @@ import auth
 project_folder = os.path.expanduser("~/mysite/pennysheet-poc")
 load_dotenv(os.path.join(project_folder, ".env"))
 
-APP_ID = os.getenv("PRODUCTION_APP_ID")
-PRIVATE_KEY = os.getenv("PRODUCTION_PRIVATE_KEY")
+APP_ID = os.getenv("PRODUCTION_APP_ID", "")
+PRIVATE_KEY = os.getenv("PRODUCTION_PRIVATE_KEY", "")
 
 REDIRECT_URL = "https://triluu03.pythonanywhere.com/auth/callback"
 
@@ -44,11 +44,6 @@ def home() -> flask.typing.ResponseReturnValue:
         JSON error body with HTTP 502 if the Enable Banking API returns a
         non-2xx response.
     """
-    if APP_ID is None or PRIVATE_KEY is None:
-        return {
-            "error": "Could not load the APP_ID or PRIVATE_KEY env variables"
-        }
-
     try:
         aspsps = auth.list_aspsps(APP_ID, PRIVATE_KEY, ASPSP_COUNTRY)
     except requests.HTTPError as exc:
@@ -66,6 +61,11 @@ def status_check() -> flask.typing.ResponseReturnValue:
         A simple JSON indicating that the application is working.
 
     """
+    if not APP_ID or not PRIVATE_KEY:
+        return {
+            "error": "Could not load the APP_ID or PRIVATE_KEY env variables"
+        }
+
     return {"status": "working"}
 
 

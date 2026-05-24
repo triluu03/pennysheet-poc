@@ -35,7 +35,7 @@ def build_jwt(app_id: str, private_key: str) -> str:
         "iss": "enablebanking.com",
         "aud": "api.enablebanking.com",
         "iat": now,
-        "exp": now + 3600,
+        "exp": now + 120,
     }
     return jwt.encode(
         payload,
